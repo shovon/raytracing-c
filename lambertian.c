@@ -13,10 +13,13 @@ bool lambertian_scatter(void *self, ray r_in, hit_record rec, vec3 *attenuation,
   return true;
 }
 
-material make_lambertian(vec3 albedo)
+material *make_lambertian(vec3 albedo)
 {
   lambertian _l = {albedo};
   lambertian *l = malloc(sizeof(lambertian));
-  material m = {l, lambertian_scatter};
+  *l = _l;
+  material _m = {l, lambertian_scatter};
+  material *m = malloc(sizeof(material));
+  *m = _m;
   return m;
 }
