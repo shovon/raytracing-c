@@ -8,6 +8,7 @@ typedef struct vec3
 } vec3;
 
 vec3 make_vec3(float, float, float);
+vec3 random_in_unit_sphere();
 
 float vec3_dot(vec3, vec3);
 vec3 vec3_cross(vec3, vec3);
