@@ -8,7 +8,7 @@
 typedef struct material
 {
   void *item;
-  bool (*scatter)(ray r_in, hit_record rec, vec3 *attenuation, ray *scattered);
+  bool (*scatter)(void *self, ray r_in, hit_record rec, vec3 *attenuation, ray *scattered);
 } material;
 
 #endif

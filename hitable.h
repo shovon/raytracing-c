@@ -6,12 +6,14 @@
 #include "ray.h"
 #include "material.h"
 
+struct material;
+
 typedef struct hit_record
 {
   float t;
   vec3 p;
   vec3 normal;
-  material mat;
+  struct material *mat;
 } hit_record;
 
 typedef struct hitable

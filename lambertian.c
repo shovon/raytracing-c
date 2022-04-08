@@ -2,12 +2,11 @@
 #include <stdlib.h>
 
 #include "lambertian.h"
-#include "material.h"
 #include "vec3.h"
 
-bool lambertian_scatter(void *p, ray r_in, hit_record rec, vec3 *attenuation, ray *scattered)
+bool lambertian_scatter(void *self, ray r_in, hit_record rec, vec3 *attenuation, ray *scattered)
 {
-  lambertian l = *((lambertian *)p);
+  lambertian l = *((lambertian *)self);
   vec3 target = vec3_add(rec.p, vec3_add(rec.normal, random_in_unit_sphere()));
   *scattered = make_ray(rec.p, vec3_sub(target, rec.p));
   *attenuation = l.albedo;
