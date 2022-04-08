@@ -46,7 +46,7 @@ int main()
   vec3 vertical = {0.0, 2.0, 0.0};
   vec3 origin = {0.0, 0.0, 0.0};
 
-  hitable world = make_hitable_list(4);
+  hitable world = make_hitable_list(5);
   hitable_list hl = *((hitable_list *)world.item);
   hl.list[0] = make_sphere(
       make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.8, 0.3, 0.3)));
@@ -56,6 +56,8 @@ int main()
       make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 0));
   hl.list[3] = make_sphere(
       make_vec3(-1, 0, -1), 0.5, make_dialectric(1.5));
+  hl.list[4] = make_sphere(
+      make_vec3(-1, 0, -1), -0.45, make_dialectric(1.5));
 
   camera cam = make_camera();
 
