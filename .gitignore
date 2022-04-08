@@ -1,0 +1,3 @@
+*.o
+raytracing-c
+img.ppm
