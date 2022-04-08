@@ -30,8 +30,6 @@ hitable make_hitable_list(int list_size)
       malloc((sizeof(hitable_list)) * list_size),
       list_size};
   *hl = _hl;
-  hitable h = {
-      (void *)(hl),
-      hitable_list_hit};
+  hitable h = {hl, hitable_list_hit};
   return h;
 }
