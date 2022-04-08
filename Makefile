@@ -9,9 +9,5 @@ all: $(OBJECTS)
 %.o: %.c
 	$(CC) -I. -c $< -o $@
 
-run:
-	make
-	./$(OUTNAME)
-
 clean:
 	rm *.o $(OUTNAME)
