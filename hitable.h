@@ -4,12 +4,14 @@
 #include <stdbool.h>
 
 #include "ray.h"
+#include "material.h"
 
 typedef struct hit_record
 {
   float t;
   vec3 p;
   vec3 normal;
+  material mat;
 } hit_record;
 
 typedef struct hitable
