@@ -7,8 +7,9 @@
 typedef struct metal
 {
   vec3 albedo;
+  float fuzz;
 } metal;
 
-material *make_metal(vec3 albedo);
+material *make_metal(vec3 albedo, float fuzz);
 
 #endif
