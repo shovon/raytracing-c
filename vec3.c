@@ -6,6 +6,15 @@ float vec3_dot(vec3 v1, vec3 v2)
   return v1.e0 * v2.e0 + v1.e1 * v2.e1 + v1.e2 * v2.e2;
 }
 
+vec3 vec3_cross(vec3 v1, vec3 v2)
+{
+  vec3 v = {
+      v1.e1 * v2.e2 - v1.e2 * v2.e1,
+      -(v1.e0 * v2.e2 - v1.e2 * v2.e0),
+      v1.e0 * v2.e1 - v1.e1 * v2.e0};
+  return v;
+}
+
 float vec3_length(vec3 v)
 {
   return sqrtf(vec3_dot(v, v));
@@ -51,4 +60,9 @@ vec3 vec3_scalar_mul(vec3 v, float c)
 vec3 vec3_scalar_div(vec3 v, float c)
 {
   return vec3_scalar_mul(v, 1 / c);
+}
+
+vec3 vec3_unit_vector(vec3 v)
+{
+  return vec3_scalar_div(v, vec3_length(v));
 }
