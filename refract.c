@@ -12,7 +12,9 @@ bool refract(vec3 v, vec3 n, float ni_over_nt, vec3 *refracted)
   if (discriminant > 0)
   {
     *refracted = vec3_sub(
-        vec3_scalar_mul(vec3_sub(uv, vec3_scalar_mul(n, dt)), ni_over_nt),
+        vec3_scalar_mul(
+            vec3_sub(uv, vec3_scalar_mul(n, dt)),
+            ni_over_nt),
         vec3_scalar_mul(n, sqrtf(discriminant)));
     return true;
   }

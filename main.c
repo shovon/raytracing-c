@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "lambertian.h"
 #include "metal.h"
+#include "dialectric.h"
 
 vec3 color(ray r, hitable world, int depth)
 {
@@ -52,9 +53,9 @@ int main()
   hl.list[1] = make_sphere(
       make_vec3(0, -100.5, -1), 100, make_lambertian(make_vec3(0.8, 0.8, 0.0)));
   hl.list[2] = make_sphere(
-      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 0.3));
+      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 0));
   hl.list[3] = make_sphere(
-      make_vec3(-1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.8, 0.8), 1));
+      make_vec3(-1, 0, -1), 0.5, make_dialectric(1.5));
 
   camera cam = make_camera();
 
