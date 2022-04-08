@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "vec3.h"
 #include "ray.h"
@@ -15,23 +16,16 @@
 
 vec3 color(ray r, hitable world, int depth)
 {
-  material *l = make_lambertian(make_vec3(0, 0, 0));
-  hit_record rec = {
-      0,
-      make_vec3(0, 0, 0),
-      make_vec3(0, 0, 0),
-      l};
+  hit_record rec;
   if (world.hit(world.item, r, 0.001, MAXFLOAT, &rec))
   {
     ray scattered;
     vec3 attenuation;
     if (depth < 50 && rec.mat->scatter(rec.mat->item, r, rec, &attenuation, &scattered))
     {
-      free(l);
       return vec3_mul(attenuation, color(scattered, world, depth + 1));
     }
   }
-  free(l);
   vec3 unit_direction = vec3_unit_vector(r.b);
   float t = 0.5 * (unit_direction.e1 + 1.0);
   return vec3_add(

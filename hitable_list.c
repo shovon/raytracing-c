@@ -1,8 +1,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "hitable.h"
 #include "hitable_list.h"
+#include "material.h"
 
 bool hitable_list_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
 {
@@ -11,13 +13,17 @@ bool hitable_list_hit(void *self, ray r, float t_min, float t_max, hit_record *r
   bool hit_anything = false;
   float closest_so_far = t_max;
 
+  material *initial_mat = temp_rec.mat;
+
   for (int i = 0; i < h.list_size; i++)
   {
     if (h.list[i].hit(h.list[i].item, r, t_min, closest_so_far, &temp_rec))
     {
+
       hit_anything = true;
       closest_so_far = temp_rec.t;
       *rec = temp_rec;
+      assert(rec->mat != initial_mat);
     }
   }
   return hit_anything;

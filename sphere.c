@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "sphere.h"
 #include "vec3.h"
@@ -22,6 +23,7 @@ bool sphere_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
       rec->t = temp;
       rec->p = ray_point_at_parameter(r, rec->t);
       rec->normal = vec3_scalar_div(vec3_sub(rec->p, s.center), s.radius);
+      rec->mat = s.mat;
       return true;
     }
     temp = (-b + sqrtf(b * b - a * c)) / a;
@@ -30,6 +32,7 @@ bool sphere_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
       rec->t = temp;
       rec->p = ray_point_at_parameter(r, rec->t);
       rec->normal = vec3_scalar_div(vec3_sub(rec->p, s.center), s.radius);
+      rec->mat = s.mat;
       return true;
     }
   }
