@@ -1,6 +1,8 @@
 #ifndef HITABLE_H
 #define HITABLE_H
 
+#include <stdbool.h>
+
 #include "ray.h"
 
 typedef struct hit_record
@@ -12,7 +14,7 @@ typedef struct hit_record
 
 typedef struct hitable_vtable
 {
-  bool (*hit)(void *h, ray r, float t_min, float t_max, hit_record &rec);
-};
+  bool (*hit)(void *self, ray r, float t_min, float t_max, hit_record *rec);
+} hitable_vtable;
 
 #endif
