@@ -1,13 +1,14 @@
+CC := gcc
 OBJ := obj
 SOURCES := $(wildcard *.c)
 OBJECTS := $(patsubst %.c, %.o, $(SOURCES))
 OUTNAME := $(notdir $(CURDIR))
 
 all: $(OBJECTS)
-	$(CC) $^ -o $(OUTNAME)
+	$(CC) -O3 $^ -o $(OUTNAME)
 
 %.o: %.c
-	$(CC) -I. -c $< -o $@
+	$(CC) -O3 -I. -c $< -o $@
 
 clean:
 	rm *.o $(OUTNAME)

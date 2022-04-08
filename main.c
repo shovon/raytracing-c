@@ -34,30 +34,80 @@ vec3 color(ray r, hitable world, int depth)
       vec3_scalar_mul(make_vec3(0.5, 0.7, 1.0), t));
 }
 
+hitable random_scene()
+{
+  int n = 500;
+  hitable world = make_hitable_list(n + 1);
+  hitable_list *hl = ((hitable_list *)world.item);
+  hl->list[0] = make_sphere(make_vec3(0, -1000, 0), 1000, make_lambertian(make_vec3(0.5, 0.5, 0.5)));
+  int i = 1;
+  for (int a = -11; a < 11; a++)
+  {
+    for (int b = -11; b < 11; b++)
+    {
+      float choose_mat = drand48();
+      vec3 center = {a + 0.9 * drand48(), 0.2, b + 0.9 * drand48()};
+      if (vec3_length(vec3_sub(center, make_vec3(4, 0.2, 0))) > 0.9)
+      {
+        if (choose_mat < 0.8)
+        {
+          hl->list[i++] = make_sphere(
+              center,
+              0.2,
+              make_lambertian(
+                  make_vec3(
+                      drand48() * drand48(),
+                      drand48() * drand48(),
+                      drand48() * drand48())));
+        }
+        else if (choose_mat < 0.95)
+        {
+          hl->list[i++] = make_sphere(
+              center,
+              0.2,
+              make_metal(
+                  make_vec3(
+                      0.5 * (1 + drand48()),
+                      0.5 * (1 + drand48()),
+                      0.5 * (1 + drand48())),
+                  drand48() * 0.5));
+        }
+        else
+        {
+          hl->list[i++] = make_sphere(center, 0.2, make_dialectric(1.5));
+        }
+      }
+    }
+  }
+
+  hl->list[i++] = make_sphere(make_vec3(0, 1, 0), 1, make_dialectric(1.5));
+  hl->list[i++] = make_sphere(make_vec3(-4, 1, 0), 1, make_lambertian(make_vec3(0.4, 0.2, 0.1)));
+  hl->list[i++] = make_sphere(make_vec3(4, 1, 0), 1, make_metal(make_vec3(0.7, 0.6, 0.5), 0));
+
+  hl->list_size = i;
+  world.item = (void *)hl;
+  return world;
+}
+
 int main()
 {
-  int nx = 200;
-  int ny = 100;
+  int nx = 1024;
+  int ny = 576;
   int ns = 100;
   printf("P3\n%d %d\n255\n", nx, ny);
 
-  vec3 lower_left_corner = {-2.0, -1.0, -1.0};
-  vec3 horizontal = {4.0, 0.0, 0.0};
-  vec3 vertical = {0.0, 2.0, 0.0};
-  vec3 origin = {0.0, 0.0, 0.0};
-
-  hitable world = make_hitable_list(5);
-  hitable_list hl = *((hitable_list *)world.item);
-  hl.list[0] = make_sphere(
-      make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.1, 0.2, 0.5)));
-  hl.list[1] = make_sphere(
-      make_vec3(0, -100.5, -1), 100, make_lambertian(make_vec3(0.8, 0.8, 0.0)));
-  hl.list[2] = make_sphere(
-      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 1));
-  hl.list[3] = make_sphere(
-      make_vec3(-1, 0, -1), 0.5, make_dialectric(1.5));
-  hl.list[4] = make_sphere(
-      make_vec3(-1, 0, -1), -0.45, make_dialectric(1.5));
+  // hitable world = make_hitable_list(5);
+  // hitable_list hl = *((hitable_list *)world.item);
+  // hl.list[0] = make_sphere(
+  //     make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.1, 0.2, 0.5)));
+  // hl.list[1] = make_sphere(
+  //     make_vec3(0, -100.5, -1), 100, make_lambertian(make_vec3(0.8, 0.8, 0.0)));
+  // hl.list[2] = make_sphere(
+  //     make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 1));
+  // hl.list[3] = make_sphere(
+  //     make_vec3(-1, 0, -1), 0.5, make_dialectric(1.5));
+  // hl.list[4] = make_sphere(
+  //     make_vec3(-1, 0, -1), -0.45, make_dialectric(1.5));
 
   // hitable world = make_hitable_list(2);
   // hitable_list hl = *((hitable_list *)world.item);
@@ -67,12 +117,19 @@ int main()
   // hl.list[1] = make_sphere(
   //     make_vec3(R, 0, -1), R, make_lambertian(make_vec3(1, 0, 0)));
 
+  hitable world = random_scene();
+
+  vec3 lookfrom = {12, 2, 4};
+  vec3 lookat = {0, 1, 0};
+  float dist_to_focus = vec3_length(vec3_sub(lookfrom, lookat));
+  float aperture = 0.2;
+
   camera cam = make_camera(
-      make_vec3(-2, 2, 1),
-      make_vec3(0, 0, -1),
+      lookfrom,
+      lookat,
       make_vec3(0, 1, 0),
-      40,
-      ((float)nx) / ((float)ny));
+      20,
+      ((float)nx) / ((float)ny), aperture, dist_to_focus);
 
   for (int j = ny - 1; j >= 0; j--)
   {
