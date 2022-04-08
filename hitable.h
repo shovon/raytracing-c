@@ -12,9 +12,10 @@ typedef struct hit_record
   vec3 normal;
 } hit_record;
 
-typedef struct hitable_vtable
+typedef struct hitable
 {
+  void *item;
   bool (*hit)(void *self, ray r, float t_min, float t_max, hit_record *rec);
-} hitable_vtable;
+} hitable;
 
 #endif

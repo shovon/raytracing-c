@@ -35,9 +35,9 @@ bool sphere_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
   return false;
 }
 
-sphere make_sphere(vec3 center, float radius)
+hitable make_sphere(vec3 center, float radius)
 {
-  hitable_vtable h = {sphere_hit};
-  sphere s = {center, radius, h};
-  return s;
+  sphere s = {center, radius};
+  hitable h = {&s, sphere_hit};
+  return h;
 }
