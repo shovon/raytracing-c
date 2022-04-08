@@ -10,31 +10,28 @@
 #include "hitable_list.h"
 #include "sphere.h"
 #include "camera.h"
+#include "lambertian.h"
+#include "metal.h"
 
-float hit_sphere(vec3 center, float radius, ray r)
+vec3 color(ray r, hitable world, int depth)
 {
-  vec3 oc = vec3_sub(r.a, center);
-  float a = vec3_dot(r.b, r.b);
-  float b = 2.0 * vec3_dot(oc, r.b);
-  float c = vec3_dot(oc, oc) - radius * radius;
-  float discriminant = b * b - 4 * a * c;
-  if (discriminant < -1.0)
+  material *l = make_lambertian(make_vec3(0, 0, 0));
+  hit_record rec = {
+      0,
+      make_vec3(0, 0, 0),
+      make_vec3(0, 0, 0),
+      l};
+  if (world.hit(world.item, r, 0.001, MAXFLOAT, &rec))
   {
-    return -1.0;
+    ray scattered;
+    vec3 attenuation;
+    if (depth < 50 && rec.mat->scatter(rec.mat->item, r, rec, &attenuation, &scattered))
+    {
+      free(l);
+      return vec3_mul(attenuation, color(scattered, world, depth + 1));
+    }
   }
-  return (-b - sqrtf(discriminant)) / (2.0 * a);
-}
-
-vec3 color(ray r, hitable world)
-{
-  hit_record rec;
-  if (world.hit(world.item, r, 0.0, MAXFLOAT, &rec))
-  {
-    vec3 target = vec3_add(
-        rec.p, vec3_add(rec.normal, random_in_unit_sphere()));
-    return vec3_scalar_mul(
-        color(make_ray(rec.p, vec3_sub(target, rec.p)), world), 0.5);
-  }
+  free(l);
   vec3 unit_direction = vec3_unit_vector(r.b);
   float t = 0.5 * (unit_direction.e1 + 1.0);
   return vec3_add(
@@ -54,12 +51,16 @@ int main()
   vec3 vertical = {0.0, 2.0, 0.0};
   vec3 origin = {0.0, 0.0, 0.0};
 
-  hitable world = make_hitable_list(2);
+  hitable world = make_hitable_list(4);
   hitable_list hl = *((hitable_list *)world.item);
   hl.list[0] = make_sphere(
-      make_vec3(0, 0, -1), 0.5);
+      make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.8, 0.3, 0.3)));
   hl.list[1] = make_sphere(
-      make_vec3(0, -100.5, -1), 100);
+      make_vec3(0, -100.5, -1), 100, make_lambertian(make_vec3(0.8, 0.8, 0.0)));
+  hl.list[2] = make_sphere(
+      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2)));
+  hl.list[3] = make_sphere(
+      make_vec3(-1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.8, 0.8)));
 
   camera cam = make_camera();
 
@@ -73,7 +74,7 @@ int main()
         float u = (((float)i) + drand48()) / ((float)nx);
         float v = (((float)j) + drand48()) / ((float)ny);
         ray r = camera_get_ray(cam, u, v);
-        col = vec3_add(col, color(r, world));
+        col = vec3_add(col, color(r, world, 0));
       }
       col = vec3_scalar_div(col, ns);
       col = make_vec3(sqrtf(col.e0), sqrtf(col.e1), sqrtf(col.e2));

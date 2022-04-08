@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "ray.h"
-#include "material.h"
+#include "vec3.h"
 
 struct material;
 

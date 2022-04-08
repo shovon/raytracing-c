@@ -9,6 +9,6 @@ typedef struct lambertian
   vec3 albedo;
 } lambertian;
 
-material make_lambertian(vec3 albedo);
+material *make_lambertian(vec3 albedo);
 
 #endif

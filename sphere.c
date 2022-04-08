@@ -36,10 +36,10 @@ bool sphere_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
   return false;
 }
 
-hitable make_sphere(vec3 center, float radius)
+hitable make_sphere(vec3 center, float radius, material *mat)
 {
   sphere *s = malloc(sizeof(sphere));
-  sphere _s = {center, radius};
+  sphere _s = {center, radius, mat};
   *s = _s;
   hitable h = {s, sphere_hit};
   return h;
