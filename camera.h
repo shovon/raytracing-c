@@ -12,7 +12,7 @@ typedef struct camera
   vec3 vertical;
 } camera;
 
-camera make_camera();
+camera make_camera(vec3, vec3, vec3, float, float);
 
 ray camera_get_ray(camera, float, float);
 

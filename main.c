@@ -49,17 +49,30 @@ int main()
   hitable world = make_hitable_list(5);
   hitable_list hl = *((hitable_list *)world.item);
   hl.list[0] = make_sphere(
-      make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.8, 0.3, 0.3)));
+      make_vec3(0, 0, -1), 0.5, make_lambertian(make_vec3(0.1, 0.2, 0.5)));
   hl.list[1] = make_sphere(
       make_vec3(0, -100.5, -1), 100, make_lambertian(make_vec3(0.8, 0.8, 0.0)));
   hl.list[2] = make_sphere(
-      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 0));
+      make_vec3(1, 0, -1), 0.5, make_metal(make_vec3(0.8, 0.6, 0.2), 1));
   hl.list[3] = make_sphere(
       make_vec3(-1, 0, -1), 0.5, make_dialectric(1.5));
   hl.list[4] = make_sphere(
       make_vec3(-1, 0, -1), -0.45, make_dialectric(1.5));
 
-  camera cam = make_camera();
+  // hitable world = make_hitable_list(2);
+  // hitable_list hl = *((hitable_list *)world.item);
+  // float R = cos(M_PI / 4);
+  // hl.list[0] = make_sphere(
+  //     make_vec3(-R, 0, -1), R, make_lambertian(make_vec3(0, 0, 1)));
+  // hl.list[1] = make_sphere(
+  //     make_vec3(R, 0, -1), R, make_lambertian(make_vec3(1, 0, 0)));
+
+  camera cam = make_camera(
+      make_vec3(-2, 2, 1),
+      make_vec3(0, 0, -1),
+      make_vec3(0, 1, 0),
+      40,
+      ((float)nx) / ((float)ny));
 
   for (int j = ny - 1; j >= 0; j--)
   {
