@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "vec3.h"
 #include "ray.h"
+#include "hitable.h"
+#include "hitable_list.h"
+#include "sphere.h"
 
 float hit_sphere(vec3 center, float radius, ray r)
 {
@@ -20,16 +24,14 @@ float hit_sphere(vec3 center, float radius, ray r)
   return (-b - sqrtf(discriminant)) / (2.0 * a);
 }
 
-vec3 color(ray r)
+vec3 color(ray r, hitable world)
 {
+  hit_record rec;
   float t = hit_sphere(make_vec3(0, 0, -1), 0.5, r);
-  if (t > 0)
+  if (world.hit(world.item, r, 0.0, MAXFLOAT, &rec))
   {
-    vec3 n = vec3_unit_vector(
-        vec3_sub(ray_point_at_parameter(r, t), make_vec3(0, 0, -1)));
     return vec3_scalar_mul(
-        make_vec3(n.e0 + 1, n.e1 + 1, n.e2 + 1),
-        0.5);
+        make_vec3(rec.normal.e0 + 1, rec.normal.e1 + 1, rec.normal.e2 + 1), 0.5);
   }
   vec3 unit_direction = vec3_unit_vector(r.b);
   t = 0.5 * (unit_direction.e1 + 1.0);
@@ -49,6 +51,13 @@ int main()
   vec3 vertical = {0.0, 2.0, 0.0};
   vec3 origin = {0.0, 0.0, 0.0};
 
+  hitable list = make_hitable_list(2);
+  hitable_list hl = *((hitable_list *)list.item);
+  hl.list[0] = make_sphere(
+      make_vec3(0, 0, -1), 0.5);
+  hl.list[1] = make_sphere(
+      make_vec3(0, -100.5, -1), 100);
+
   for (int j = ny - 1; j >= 0; j--)
   {
     for (int i = 0; i < nx; i++)
@@ -62,7 +71,7 @@ int main()
               vec3_add(
                   vec3_scalar_mul(horizontal, u),
                   vec3_scalar_mul(vertical, v)))};
-      vec3 col = color(r);
+      vec3 col = color(r, list);
       int ir = (int)(255.99 * col.e0);
       int ig = (int)(255.99 * col.e1);
       int ib = (int)(255.99 * col.e2);

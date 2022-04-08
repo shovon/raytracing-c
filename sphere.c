@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "sphere.h"
 #include "vec3.h"
@@ -37,7 +38,9 @@ bool sphere_hit(void *self, ray r, float t_min, float t_max, hit_record *rec)
 
 hitable make_sphere(vec3 center, float radius)
 {
-  sphere s = {center, radius};
-  hitable h = {&s, sphere_hit};
+  sphere *s = malloc(sizeof(sphere));
+  sphere _s = {center, radius};
+  *s = _s;
+  hitable h = {s, sphere_hit};
   return h;
 }

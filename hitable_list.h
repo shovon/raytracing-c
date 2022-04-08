@@ -9,4 +9,6 @@ typedef struct hitable_list
   int list_size;
 } hitable_list;
 
+hitable make_hitable_list(int list_size);
+
 #endif
