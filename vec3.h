@@ -1,12 +1,13 @@
 #ifndef VEC3_H
 #define VEC3_H
-
 typedef struct vec3
 {
   float e0;
   float e1;
   float e2;
 } vec3;
+
+vec3 make_vec3(float, float, float);
 
 float vec3_dot(vec3, vec3);
 vec3 vec3_cross(vec3, vec3);
