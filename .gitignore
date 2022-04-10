@@ -1,3 +1,4 @@
 *.o
 raytracing-c
 img.ppm
+.DS_Store

@@ -4,19 +4,6 @@
 #include "camera.h"
 #include "vec3.h"
 
-vec3 random_in_unit_disk()
-{
-  vec3 p;
-  do
-  {
-    p = vec3_scalar_mul(
-        vec3_sub(
-            make_vec3(drand48(), drand48(), 0), make_vec3(1, 1, 0)),
-        2);
-  } while (vec3_dot(p, p) >= 1.0);
-  return p;
-}
-
 camera make_camera(
     vec3 lookfrom,
     vec3 lookat,
@@ -49,7 +36,7 @@ camera make_camera(
 
 ray camera_get_ray(camera c, float s, float t)
 {
-  vec3 rd = vec3_scalar_mul(random_in_unit_disk(), c.lens_radius);
+  vec3 rd = vec3_scalar_mul(random_in_unit_sphere(), c.lens_radius);
   vec3 offset = vec3_add(
       vec3_scalar_mul(c.u, rd.e0),
       vec3_scalar_mul(c.v, rd.e1));
