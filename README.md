@@ -1,4 +1,4 @@
-# Ray Tracing in One Weekend in V
+# Ray Tracing in One Weekend in C
 
 ![Output from ray tracing](/output.png)
 
